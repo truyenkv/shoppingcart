@@ -7,7 +7,8 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.6">
-    <title>Front</title>
+    <title><%= title %></title>  <!-- get title at app -->
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 
   </head>
@@ -49,7 +50,7 @@
 </nav>
 
 <main role="main" class="container">
-
+  <%- messages('messages', locals) %>
 
 </main><!-- /.container -->
 
