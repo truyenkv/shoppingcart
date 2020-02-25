@@ -40,23 +40,10 @@ app.use(session({
   cookie: { secure: true }
 }));
 
-//Express validator middleware
-// app.use(expressValidator({
-//   errorFormatter: function(param, msg, value) {
-//       var   namespace = param.split('.'),
-//             root      = namespace.shift(),
-//             formParam = root;
 
-//     while(namespace.length) {
-//       formParam += '[' + namespace.shift() + ']';
-//     }
-//     return {
-//       param : formParam,
-//       msg   : msg,
-//       value : value
-//     };
-//   }
-// }));
+//set global errors variable
+app.locals.errors = null;
+
 
  //express message middlerware
  app.use(require('connect-flash')());
