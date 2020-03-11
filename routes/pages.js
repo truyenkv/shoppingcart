@@ -7,9 +7,4 @@ router.get('/', function(req, res){
     });
 });
 
-//sau dau / chinh la url 
-// router.get('/test', function(req, res){
-//   res.send('testing area....')
-// });
-//export
 module.exports = router;
