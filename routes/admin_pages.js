@@ -62,7 +62,6 @@ router.post('/add-page',[
     } else{
         Page.findOne({slug: slug}, function(err, page){
             if(page){
-                console.log('tim thanh cong')
                 req.flash('danger', 'Page slug exists, choose another');
                 res.render('admin/add_page',{
                     title: title,
@@ -116,7 +115,7 @@ router.get('/edit-page/:slug', (req, res) => {
     Page.findOne({slug: req.params.slug}, (err, page) => {
         if(err)
             return console.log(err);
-         res.render('admin/add_page', {
+         res.render('admin/edit_page', {
             title: page.title,
             slug: page.slug,
             content: page.content,
@@ -126,5 +125,61 @@ router.get('/edit-page/:slug', (req, res) => {
     });
     
 });
+
+/*
+* POST edit page
+*/
+router.post('/edit-page/:slug',[
+    check('title').notEmpty().withMessage('Title must have a value'),
+    check('content').notEmpty().withMessage('Content must have a value')
+], (req, res) => {
+    var title = req.body.title;
+     var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+     if(slug== "") slug = title.replace(/\s+/g, '-').toLowerCase();
+    var content = req.body.content;
+    var id = req.body.id;
+    var errors = validationResult(req);
+    if(!errors.isEmpty()){
+        console.log(errors);
+        res.render('admin/edit_page', {
+            errors: errors,
+            title: title,
+            slug: slug,
+            content: content,
+            id: id
+        });
+    } else{
+        Page.findOne({slug: slug, _id:{'$ne': id}}, function(err, page){
+            if(page){
+                req.flash('danger', 'Page slug exists, choose another');
+                res.render('admin/edit_page',{
+                    title: title,
+                    slug: slug,
+                    content: content,
+                    id: id
+                });
+            } else {
+                Page.findById(id, (err, page) => {
+                    if(err)
+                        return console.log(err);
+                    page.title = title;
+                    page.slug = slug;
+                    page.content = content;
+                    page.save((err) => {
+                        if(err) return console.log(err);
+                        req.flash('success', 'Page added');
+                        res.redirect('/admin/pages');
+                    });
+                });
+                
+                
+            }
+
+        });
+    }
+      
+});
+
+
 
 module.exports = router;
