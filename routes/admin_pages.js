@@ -74,7 +74,7 @@ router.post('/add-page',[
                     title: title,
                     slug: slug,
                     content: content,
-                    sorting: 100
+                    sorting: 0
                 });
                 page.save(function(err){
                     if(err) return console.log(err);
@@ -87,4 +87,44 @@ router.post('/add-page',[
     }
       
 });
+
+// POST reorder page 
+router.post('/reorder-pages', (req, res) => {
+    var ids = req.body['id[]'];
+    var count = 0;
+    for(var i=0; i< ids.length; i++){
+        var id = ids[i];
+        count++;
+        ((count) => {
+            Page.findById(id, (err, page) => {
+                page.sorting = count;
+                page.save((err) => {
+                    if(err)
+                        return console.log(err);
+                });
+            });
+        })(count);
+    }
+    
+});
+
+
+/*
+* GET edit page
+*/
+router.get('/edit-page/:slug', (req, res) => {
+    Page.findOne({slug: req.params.slug}, (err, page) => {
+        if(err)
+            return console.log(err);
+         res.render('admin/add_page', {
+            title: page.title,
+            slug: page.slug,
+            content: page.content,
+            id: page._id
+    });
+    
+    });
+    
+});
+
 module.exports = router;
