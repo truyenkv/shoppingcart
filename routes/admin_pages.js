@@ -10,9 +10,7 @@ var Page = require('../models/page');
 /*
 * GET pages index 
 */
-// router.get('/', function(req, res){
-//     res.send('admin area');
-// });
+
 router.get('/', (req, res) => {
     Page.find({}).sort({sorting: 1}).exec((err, pages) => {
         res.render('admin/pages', {
@@ -168,7 +166,7 @@ router.post('/edit-page/:slug',[
                     page.save((err) => {
                         if(err) return console.log(err);
                         req.flash('success', 'Page added');
-                        res.redirect('/admin/pages');
+                        res.redirect('/admin/pages/edit-page/'+page.slug);
                     });
                 });
                 
@@ -178,6 +176,18 @@ router.post('/edit-page/:slug',[
         });
     }
       
+});
+
+/*
+* GET pages delete 
+*/
+
+router.get('/delete-page/:id', (req, res) => {
+    Page.findByIdAndRemove(req.params.id, (err)=>{
+        if(err) return console.log(err);
+        req.flash('success', 'Page deleted');
+        res.redirect('/admin/pages');
+    });
 });
 
 

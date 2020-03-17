@@ -7,7 +7,7 @@ var session = require('express-session');
 var expressValidator = require('express-validator');
 
 //connect database
-mongoose.connect(config.database, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(config.database, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
@@ -55,7 +55,10 @@ app.use(function (req, res, next) {
 //set routes
 var pages = require('./routes/pages.js');
 var adminPages = require('./routes/admin_pages.js');
+var adminCategories = require('./routes/admin_categories.js');
+
 app.use('/admin/pages', adminPages);
+app.use('/admin/categories', adminCategories);
 app.use('/', pages);
 
 //start the server
